@@ -3,7 +3,7 @@ import { io } from 'socket.io-client';
 import { useAtom, atom } from 'jotai';
 
 // Connexion au serveur WebSocket
-export const socket = io('http://localhost:4000');
+export const socket = io('https://d-yrgs.onrender.com');
 
 // État global des personnages (drones)
 export const charactersAtom = atom([]);

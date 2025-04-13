@@ -15,7 +15,7 @@ interface Character {
   isMoving: boolean;
 }
 
-@WebSocketGateway(4000, { cors: { origin: 'http://localhost:5173' } })
+@WebSocketGateway(4000, { cors: { origin: 'https://portfolio-nine-mu-34.vercel.app/' } })
 export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
