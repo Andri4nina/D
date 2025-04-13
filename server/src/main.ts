@@ -6,9 +6,8 @@ async function bootstrap() {
 
   // Activer CORS pour les requêtes HTTP
   app.enableCors({
-    origin: 'http://localhost:5173', // Remplacez par l'URL de votre frontend
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
+    origin: 'https://portfolio-nine-mu-34.vercel.app', // ton frontend vercel
+    methods: ['GET', 'POST'],
   });
 
   const port = process.env.PORT || 3000; // Utilisez le port défini dans les variables d'environnement, ou 3000 par défaut
