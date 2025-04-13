@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import SideBar from "./components/SideBar"
+import SideBar from "./components/SideBar";
 import Experience3D from "./components/Experience3D";
 import HomeLayouts from "./layouts/HomeLayouts";
 import AboutLayouts from "./layouts/AboutLayouts";
@@ -12,15 +12,13 @@ import CVLayouts from "./layouts/CVLayouts";
 import Footer from "./components/Footer";
 import Cursor from "./components/Cursor";
 import ThreeDPage from "./pages/ThreeDPage";
-
-
+import Loader from "./components/Loader";
 
 function App() {
-
   const [activeSection, setActiveSection] = useState('home');
-
-  const [loading, setLoading] = useState(false);
-  const [playGame, setPlayGame] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [playGame, setPlayGame] = useState(false);
+  const [show3DLoader, setShow3DLoader] = useState(false); // Nouvel état pour le loader 3D
   const [darkMode, setDarkMode] = useState(() => {
     return localStorage.getItem("theme") === "dark";
   });
@@ -30,9 +28,9 @@ function App() {
   const [login, setLogin] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       setLoading(false);
-    }, 2000);
+    }, 12000);
 
     if (darkMode) {
       document.documentElement.classList.add("dark");
@@ -41,13 +39,25 @@ function App() {
       document.documentElement.classList.remove("dark");
       localStorage.setItem("theme", "light");
     }
+
+    return () => clearTimeout(timer);
   }, [darkMode]);
 
   useEffect(() => {
     localStorage.setItem("themeColor", themeColor);
   }, [themeColor]);
 
-  // Ajoutez toutes les sections ici
+  // Fonction pour gérer la transition vers le 3D
+  useEffect(() => {
+    if (playGame) {
+      setShow3DLoader(true);
+      const timer = setTimeout(() => {
+        setShow3DLoader(false);
+      }, 1500); // Durée du loader 3D
+      return () => clearTimeout(timer);
+    }
+  }, [playGame]);
+
   const sectionRefs = {
     home: useRef(null),
     about: useRef(null),
@@ -60,10 +70,11 @@ function App() {
   };
 
   useEffect(() => {
+    if (loading) return;
+
     const handleScroll = () => {
       const scrollPosition = window.scrollY + 200;
 
-      // Mettez à jour avec toutes les sections
       const sections = [
         { id: 'home', ref: sectionRefs.home },
         { id: 'about', ref: sectionRefs.about },
@@ -96,10 +107,11 @@ function App() {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, [loading]);
 
-  // Fonction améliorée pour le scroll
   const scrollToSection = (sectionId) => {
+    if (loading) return;
+    
     const section = sectionRefs[sectionId]?.current;
     if (section) {
       window.scrollTo({
@@ -110,18 +122,25 @@ function App() {
     }
   };
 
-
-
-  if(playGame){
-    return (
-      <>
-        <ThreeDPage setPlayGame={setPlayGame}/>
-      </>
-    )
+  // Si en mode jeu et le loader 3D est terminé, afficher ThreeDPage
+  if (playGame && !show3DLoader) {
+    return <ThreeDPage setPlayGame={setPlayGame} />;
   }
+
+  // Afficher le loader 3D pendant la transition
+  if (show3DLoader) {
+    return <Loader customMessage="Passage en mode 3D..." />;
+  }
+
+  // Afficher le loader initial pendant le chargement
+  if (loading) {
+    return <Loader onLoaded={() => setLoading(false)} />;
+  }
+
+  // Contenu principal après le chargement
   return (
     <>
-      <section className='relative w-full overflow-x-hidden dark:text-white '>
+      <section className='relative w-full overflow-x-hidden dark:text-white'>
         <SideBar
           themeColor={themeColor}
           setThemeColor={setThemeColor}
@@ -134,55 +153,54 @@ function App() {
           setLogin={setLogin}
         />
 
-        <div className="fixed z-10 top-0 left-0 h-screen w-full ">
-          <Experience3D themeColor={themeColor} darkMode={darkMode} sectionRefs={sectionRefs}
-            activeSection={activeSection} />
+        <div className="fixed z-10 top-0 left-0 h-screen w-full">
+          <Experience3D 
+            themeColor={themeColor} 
+            darkMode={darkMode} 
+            sectionRefs={sectionRefs}
+            activeSection={activeSection} 
+          />
         </div>
 
         <div className='relative z-20'>
-          {/* Passez la ref directement à chaque composant */}
           <div ref={sectionRefs.home} id="home">
-            <HomeLayouts themeColor={themeColor} ref={sectionRefs.home} />
+            <HomeLayouts themeColor={themeColor} />
           </div>
 
           <div ref={sectionRefs.about} id="about">
-            <AboutLayouts themeColor={themeColor} ref={sectionRefs.about} />
+            <AboutLayouts themeColor={themeColor} />
           </div>
 
           <div ref={sectionRefs.services} id="services">
-            <ServiceLayouts themeColor={themeColor} ref={sectionRefs.services} />
+            <ServiceLayouts themeColor={themeColor} />
           </div>
 
           <div ref={sectionRefs.competences} id="competences">
-            <CompetenceLayouts themeColor={themeColor} ref={sectionRefs.competences} />
+            <CompetenceLayouts themeColor={themeColor} />
           </div>
 
           <div ref={sectionRefs.portfolio} id="portfolio">
-            <PortfolioLayouts themeColor={themeColor} ref={sectionRefs.portfolio} />
+            <PortfolioLayouts themeColor={themeColor} />
           </div>
 
           <div ref={sectionRefs.parcours} id="parcours">
-            <ParcoursLayouts themeColor={themeColor} ref={sectionRefs.parcours} />
+            <ParcoursLayouts themeColor={themeColor} />
           </div>
 
           <div ref={sectionRefs.contact} id="contact">
-            <ContactLayouts themeColor={themeColor} ref={sectionRefs.contact} />
+            <ContactLayouts themeColor={themeColor} />
           </div>
 
           <div ref={sectionRefs.resume} id="resume">
-            <CVLayouts themeColor={themeColor} ref={sectionRefs.resume} />
+            <CVLayouts themeColor={themeColor} />
           </div>
 
-
           <Footer setPlayGame={setPlayGame} />
-
           <Cursor themeColor={themeColor}/>
         </div>
-
-     
       </section>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
