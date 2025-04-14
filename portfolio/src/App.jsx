@@ -129,7 +129,7 @@ function App() {
 
   // Afficher le loader 3D pendant la transition
   if (show3DLoader) {
-    return <Loader customMessage="Passage en mode 3D..." />;
+    return <Loader customMessage="Passage en mode 3D..." themeColor={themeColor}/>;
   }
 
   // Afficher le loader initial pendant le chargement
