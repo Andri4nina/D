@@ -54,7 +54,7 @@ const projects = [
         links: {
             live: "https://lnkd.in/eEu4jxSx"
         },
-        image: "/images/kalintsika anio.jfif"
+        image: "/images/Kalintsika anio.jfif"
     },
     {
         title: "Pubnex",
