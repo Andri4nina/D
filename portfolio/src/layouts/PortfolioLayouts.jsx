@@ -52,21 +52,19 @@ const projects = [
         technologies: ["React Native"],
         year: 2024,
         links: {
-            github: "#",
-            live: "#"
+            live: "https://lnkd.in/eEu4jxSx"
         },
-        image: "/placeholder-kalintsika.jpg"
+        image: "/images/kalintsika anio.jfif"
     },
     {
         title: "Pubnex",
-        description: "Réseau social pour professionnels",
+        description: "AppBlog pour projet d'ecole",
         technologies: ["React", "NestJS"],
         year: 2024,
         links: {
             github: "#",
-            live: "#"
         },
-        image: "/placeholder-pubnex.jpg"
+        image: "/images/pubnex2.0.png"
     },
     {
         title: "Pisciculture",
@@ -74,8 +72,7 @@ const projects = [
         technologies: ["React", "Spring Boot"],
         year: 2024,
         links: {
-            github: "#",
-            live: "#"
+            github: "https://github.com/Andri4nina/Pisciculture.git",
         },
         image: "/placeholder-pisciculture.jpg"
     },
@@ -85,14 +82,14 @@ const projects = [
         technologies: ["Laravel"],
         year: 2024,
         links: {
-            github: "#",
-            live: "#"
+            github: "https://github.com/Andri4nina/courrier.git",
+           
         },
-        image: "/placeholder-posteman.jpg"
+        image: "/images/posteman.png"
     },
     {
-        title: "Gestion de location",
-        description: "Système de gestion de propriétés locatives",
+        title: "Gestion de location de voitures",
+        description: "Système de gestion de location de voitures",
         technologies: ["C#", "Java"],
         year: 2023,
         links: {
@@ -129,8 +126,8 @@ const projects = [
         technologies: ["HTML", "CSS"],
         year: 2022,
         links: {
-            github: "#",
-            live: "#"
+            github: "https://github.com/Andri4nina/andri4nina.github.io.git",
+            live: "https://andri4nina.github.io/"
         },
         image: "/images/Portfolio ancien.png"
     }
