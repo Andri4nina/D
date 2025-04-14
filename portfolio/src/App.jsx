@@ -134,7 +134,7 @@ function App() {
 
   // Afficher le loader initial pendant le chargement
   if (loading) {
-    return <Loader onLoaded={() => setLoading(false)} />;
+    return <Loader onLoaded={() => setLoading(false)} themeColor={themeColor}/>;
   }
 
   // Contenu principal après le chargement
