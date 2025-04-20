@@ -57,7 +57,7 @@ const MobileControls = () => {
     };
 
     return (
-        <div className="fixed inset-0 pointer-events-none z-50">
+        <div className="block md:hidden fixed inset-0 pointer-events-none z-50">
             {/* Bouton Start - Top Left - Version améliorée */}
             <button
                 onClick={() => {
