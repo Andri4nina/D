@@ -5,6 +5,7 @@ import TouchDrone from '../components/TouchDrone';
 import MapBouton from '../components/MapBouton';
 import Immersive3DLayouts from '../layouts/Immersive3DLayouts';
 import { SpecialistPositionProvider } from '../contexts/SpecialistPositionContext';
+import MobileControls from '../components/MobileController';
 
 const ThreeDPage = ({ setPlayGame }) => {
   const [mute, setMute] = useState(false);
@@ -33,7 +34,7 @@ const ThreeDPage = ({ setPlayGame }) => {
 
       <SpecialistPositionProvider>
         <section className="w-full h-screen relative">
-          <Canvas shadows camera={{ position: [0, 2, 5], fov: 50 }}>
+          <Canvas shadows dpr={[1, 1.5]} camera={{ position: [0, 2, 5], fov: 50 }}>
             <Immersive3DLayouts droneColor={localColor} />
           </Canvas>
           {/* VolumeSelected */}
@@ -55,9 +56,12 @@ const ThreeDPage = ({ setPlayGame }) => {
             </div>
           </div>
           {/* TouchDrone */}
+
           <TouchDrone />
           {/* MapBouton */}
           <MapBouton />
+
+          <MobileControls />
         </section>
       </SpecialistPositionProvider>
     </>

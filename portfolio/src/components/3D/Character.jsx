@@ -22,7 +22,7 @@ const Character = ({ isNight, droneColor }) => {
   const groupRef = useRef();
   const { camera, mouse } = useThree();
   const [characters, setCharacters] = useAtom(charactersAtom);
-
+  const [keyboardLayout, setKeyboardLayout] = useState('qwerty');
   const { updateDronePosition, glowingSpecialist } = useSpecialistPositionContext();  // Utiliser le contexte
 
   const cameraDistance = 5;
@@ -35,6 +35,35 @@ const Character = ({ isNight, droneColor }) => {
   const lateralSpeed = 0.05;
   const forwardTiltAngle = 0.1;
   const backwardTiltAngle = -0.1;
+
+  useEffect(() => {
+    // Fonction pour détecter la disposition du clavier
+    const detectKeyboardLayout = () => {
+      // Test basique - vérifie si la touche 'a' produit 'q' (ce qui serait le cas sur AZERTY)
+      // Note: Cette méthode n'est pas parfaite mais peut donner une indication
+      try {
+        if (navigator.keyboard && navigator.keyboard.getLayoutMap) {
+          navigator.keyboard.getLayoutMap().then(layoutMap => {
+            if (layoutMap.get('KeyA') === 'q') {
+              setKeyboardLayout('azerty');
+            } else {
+              setKeyboardLayout('qwerty');
+            }
+          });
+        } else {
+          // Fallback pour les navigateurs qui ne supportent pas Keyboard API
+          const isProbablyAzerty = navigator.language.includes('fr') ||
+            navigator.languages.some(lang => lang.includes('fr'));
+          setKeyboardLayout(isProbablyAzerty ? 'azerty' : 'qwerty');
+        }
+      } catch (e) {
+        console.error("Erreur de détection du clavier:", e);
+      }
+    };
+
+    detectKeyboardLayout();
+  }, []);
+
 
 
   useEffect(() => {
@@ -118,27 +147,42 @@ const Character = ({ isNight, droneColor }) => {
   // Gestion des événements clavier
   useEffect(() => {
     const handleKeyDown = (event) => {
+
+
+      const keyMap = {
+        moveForward: keyboardLayout === 'azerty' ? 'z' : 'w',
+        moveBackward: keyboardLayout === 'azerty' ? 's' : 's',
+        turnLeft: keyboardLayout === 'azerty' ? 'q' : 'a',
+        turnRight: keyboardLayout === 'azerty' ? 'd' : 'd',
+        ascend: keyboardLayout === 'azerty' ? 'a' : 'z', // Note: 'a' sur AZERTY est à gauche de 'z'
+        descend: 'x'
+      };
+
+
+
+
       switch (event.key.toLowerCase()) {
         case 'p':
           setIsMoving((prevIsMoving) => !prevIsMoving);
           break;
-        case 'w':
+        case keyMap.moveForward:
           setIsMovingForward(true);
           break;
-        case 's':
+        case keyMap.moveBackward:
           setIsMovingBackward(true);
           break;
-        case 'a':
+        case keyMap.turnLeft:
           setIsTurningLeft(true);
           break;
-        case 'd':
+        case keyMap.turnRight:
           setIsTurningRight(true);
           break;
-        case 'z':
+        case keyMap.ascend:
           setIsAscending(true);
           break;
-        case 'x':
+        case keyMap.descend:
           setIsDescending(true);
+
           break;
         /*   case 'enter': // Ouvrir la bulle de discussion
             if (glowingSpecialist) { // Vérifier si le drone est proche d'un spécialiste
@@ -151,23 +195,32 @@ const Character = ({ isNight, droneColor }) => {
     };
 
     const handleKeyUp = (event) => {
+      const keyMap = {
+        moveForward: keyboardLayout === 'azerty' ? 'z' : 'w',
+        moveBackward: keyboardLayout === 'azerty' ? 's' : 's',
+        turnLeft: keyboardLayout === 'azerty' ? 'q' : 'a',
+        turnRight: keyboardLayout === 'azerty' ? 'd' : 'd',
+        ascend: keyboardLayout === 'azerty' ? 'a' : 'z',
+        descend: 'x'
+      };
+
       switch (event.key.toLowerCase()) {
-        case 'w':
+        case keyMap.moveForward:
           setIsMovingForward(false);
           break;
-        case 's':
+        case keyMap.moveBackward:
           setIsMovingBackward(false);
           break;
-        case 'a':
+        case keyMap.turnLeft:
           setIsTurningLeft(false);
           break;
-        case 'd':
+        case keyMap.turnRight:
           setIsTurningRight(false);
           break;
-        case 'z':
+        case keyMap.ascend:
           setIsAscending(false);
           break;
-        case 'x':
+        case keyMap.descend:
           setIsDescending(false);
           break;
         default:

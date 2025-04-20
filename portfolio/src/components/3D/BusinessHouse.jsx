@@ -9,94 +9,106 @@ Title: 3D Models Building|Apartement|Hotel|Home
 import React, { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
 
-export function BusinessHouse(props) {
+export function BusinessHouse({ isNight, ...props }) {
   const { nodes, materials } = useGLTF('/object3d/3d_models_buildingapartementhotelhome.glb')
   return (
-    <group {...props} dispose={null} position={[-250,5.9,0]} scale={.3}>
-      <group scale={0.01}>
-        <group
-          position={[55606.047, -2000, -354.138]}
-          rotation={[-Math.PI / 2, 0, 0]}
-          scale={[211.782, 298.11, 371.915]}>
-          <group position={[15.191, 9.831, 11.675]}>
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes.Apartment_Building233__Black001_0.geometry}
-              material={materials['Black.001']}
-            />
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes.Apartment_Building233_Material003_0.geometry}
-              material={materials['Material.003']}
-            />
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes.Apartment_Building233__White_0.geometry}
-              material={materials.White}
-            />
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes.Apartment_Building233_aluminum2_0.geometry}
-              material={materials.aluminum2}
-            />
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes.Apartment_Building233_aluminum2_0_1.geometry}
-              material={materials.aluminum2}
-            />
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes.Apartment_Building233_aluminum2_0_2.geometry}
-              material={materials.aluminum2}
-            />
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes.Apartment_Building233_aluminum2_0_3.geometry}
-              material={materials.aluminum2}
-            />
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes.Apartment_Building233_aluminum2_0_4.geometry}
-              material={materials.aluminum2}
-            />
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes.Apartment_Building233_glass001_0.geometry}
-              material={materials['glass.001']}
-            />
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes.Apartment_Building233_Material001_0.geometry}
-              material={materials['Material.001']}
-            />
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes.Apartment_Building233_StoneTile_0.geometry}
-              material={materials.StoneTile}
-            />
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes.Apartment_Building233__Black_0.geometry}
-              material={materials.Black}
-            />
-          </group>
+    <>
+  <pointLight
+        position={[-75, 7, 2]}
+        color="white"
+        intensity={isNight? 100 : 0}
+        distance={20}
+        decay={2}
+      />
 
-        
+
+      <group {...props} dispose={null} position={[-250, 5.9, 0]} scale={.3}>
+        <group scale={0.01}>
+          <group
+            position={[55606.047, -2000, -354.138]}
+            rotation={[-Math.PI / 2, 0, 0]}
+            scale={[211.782, 298.11, 371.915]}>
+            <group position={[15.191, 9.831, 11.675]}>
+              <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Apartment_Building233__Black001_0.geometry}
+                material={materials['Black.001']}
+              />
+              <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Apartment_Building233_Material003_0.geometry}
+                material={materials['Material.003']}
+              />
+              <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Apartment_Building233__White_0.geometry}
+                material={materials.White}
+              />
+              <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Apartment_Building233_aluminum2_0.geometry}
+                material={materials.aluminum2}
+              />
+              <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Apartment_Building233_aluminum2_0_1.geometry}
+                material={materials.aluminum2}
+              />
+              <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Apartment_Building233_aluminum2_0_2.geometry}
+                material={materials.aluminum2}
+              />
+              <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Apartment_Building233_aluminum2_0_3.geometry}
+                material={materials.aluminum2}
+              />
+              <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Apartment_Building233_aluminum2_0_4.geometry}
+                material={materials.aluminum2}
+              />
+              <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Apartment_Building233_glass001_0.geometry}
+                material={materials['glass.001']}
+              />
+              <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Apartment_Building233_Material001_0.geometry}
+                material={materials['Material.001']}
+              />
+              <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Apartment_Building233_StoneTile_0.geometry}
+                material={materials.StoneTile}
+              />
+              <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Apartment_Building233__Black_0.geometry}
+                material={materials.Black}
+              />
+            </group>
+
+
+          </group>
         </group>
       </group>
-    </group>
+    </>
+
   )
 }
 

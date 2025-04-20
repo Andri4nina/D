@@ -1,13 +1,14 @@
 import React from 'react'
-import { EmitPrincipal } from '../components/3D/EmitPrincipal'
+import { AllEmit } from '../components/3D/Emit'
 
-const EmitScene = () => {
+
+
+const EmitScene = ({isNight}) => {
   return (
     <>
-  {/*   <group position={[5,0,-40]}>
-      <EmitPrincipal />
-    </group> */}
-    
+    <group position={[0, 0, -50]} rotation={[0, 0, 0]} scale={1}>
+      <AllEmit isNight={isNight}/>
+    </group>
     </>
   )
 }

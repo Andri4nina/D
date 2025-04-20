@@ -5,7 +5,7 @@ const MapBouton = () => {
 
   return (
     <>
-      <div className="absolute bottom-5 right-5">
+      <div className="hidden md:block absolute bottom-5 right-5">
         {/* Bouton avec icône de carte */}
         <button
           onClick={() => setShowMap(!showMap)}

@@ -4,7 +4,7 @@ const TouchDrone = () => {
   const [isVisible, setIsVisible] = useState(true);
 
   return (
-    <div className="absolute bottom-5 left-5 bg-gray-800 w-[300px] p-4 rounded-lg shadow-lg text-sm border border-gray-700">
+    <div className="hidden md:block absolute bottom-5 left-5 bg-gray-800 w-[300px] p-4 rounded-lg shadow-lg text-sm border border-gray-700">
       {/* Chevron pour afficher/cacher */}
       <div
         className="flex items-center justify-between cursor-pointer"
