@@ -17,7 +17,7 @@ import Loader from "./components/Loader";
 function App() {
   const [activeSection, setActiveSection] = useState('home');
   const [loading, setLoading] = useState(true);
-  const [playGame, setPlayGame] = useState(false);
+  const [playGame, setPlayGame] = useState(true);
   const [show3DLoader, setShow3DLoader] = useState(false); // Nouvel état pour le loader 3D
   const [darkMode, setDarkMode] = useState(() => {
     return localStorage.getItem("theme") === "dark";

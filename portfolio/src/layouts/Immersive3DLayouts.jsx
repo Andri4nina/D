@@ -12,6 +12,8 @@ import ProjectScene from "../scenes/ProjectScene";
 import WayScene from "../scenes/WayScene";
 import TeamScene from "../scenes/TeamScene";
 import EmitScene from "../scenes/EmitScene";
+import CharacterScene from "../scenes/CharacterScene";
+import BushesScene from "../scenes/BushesScene";
 
 const Immersive3DLayouts = ({ droneColor }) => {
     const directionalLightRef = useRef();
@@ -203,13 +205,14 @@ const Immersive3DLayouts = ({ droneColor }) => {
                 <WayScene isNight={isNight} />
                 <TeamScene isNight={isNight} />
                 <EmitScene />
+                <BushesScene />
 
 
-
-                <SocketManager />
+             {/*    <SocketManager />
                 <group position={[0, 0.2, 0]}>
                     <Character castShadow receiveShadow isNight={isNight} droneColor={droneColor} />
-                </group>
+                </group> */}
+              {/*   <CharacterScene /> */}
 
             </Physics>
             <OrbitControls />
