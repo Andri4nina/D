@@ -114,8 +114,7 @@ const Immersive3DContent = ({ droneColor }) => {
         {/* Scènes */}
          <SocketManager />
         <group>
-          <CharacterScene />
-
+          <CharacterScene droneColor={droneColor}/>
           <QgScene />
           <TreeScene />
           <BushesScene />

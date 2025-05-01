@@ -6,7 +6,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useAtom } from 'jotai';
 
-const CharacterScene = ({ isNight, droneColor }) => {
+const CharacterScene = ({ droneColor }) => {
   const rigidBodyRef = useRef(null);
   const droneRef = useRef(null);
   const { camera } = useThree();

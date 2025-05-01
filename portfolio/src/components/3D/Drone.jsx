@@ -7,7 +7,7 @@ import { SkeletonUtils } from "three-stdlib"
 import { useDayNight } from '../../contexts/DayNightContext'
 import * as THREE from 'three';
 
-export function Drone({ isMoving, color = "red", ...props }) {
+export function Drone({ isMoving, color, ...props }) {
   const group = useRef()
   const { isNight } = useDayNight();
   const lightRef = useRef();
