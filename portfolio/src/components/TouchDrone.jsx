@@ -50,12 +50,12 @@ const TouchDrone = () => {
         </div>
 
         <div className="flex items-center gap-5 my-2">
-          <span className="bg-gray-700 w-10 h-7 flex items-center justify-center rounded text-gray-200">Z</span>
+          <span className="bg-gray-700 w-10 h-7 flex items-center justify-center rounded text-gray-200">Espace</span>
           <div className="text-gray-200">Monter</div>
         </div>
 
         <div className="flex items-center gap-5 my-2">
-          <span className="bg-gray-700 w-10 h-7 flex items-center justify-center rounded text-gray-200">X</span>
+          <span className="bg-gray-700 w-10 h-7 flex items-center justify-center rounded text-gray-200">Shift</span>
           <div className="text-gray-200">Descendre</div>
         </div>
       </div>

@@ -8,31 +8,60 @@ Title: Factory lowpoly free
 
 import React, { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
+import { useDayNight } from '../../contexts/DayNightContext';
+import { useFrame, useThree } from '@react-three/fiber';
+import * as THREE from 'three';
+import { RigidBody } from '@react-three/rapier';
 
-export function RedFactory({ isNight, ...props }) {
-    const { nodes, materials } = useGLTF('/object3d/factory_lowpoly_free.glb')
+const MAX_LIGHT_DISTANCE = 50;
+
+export function RedFactory({ ...props }) {
+    const { nodes, materials } = useGLTF('/elements/factory_lowpoly_free.glb')
+    const { isNight } = useDayNight();
+    const lightRef = useRef();
+    const { camera } = useThree();
+
+    useFrame(() => {
+        if (!lightRef.current) return;
+
+        const lanternPos = lightRef.current.getWorldPosition(new THREE.Vector3());
+        const distance = lanternPos.distanceTo(camera.position);
+
+        const shouldLight = isNight && distance < MAX_LIGHT_DISTANCE;
+        const targetIntensity = shouldLight ? 30 : 0;
+
+        lightRef.current.intensity = THREE.MathUtils.lerp(
+            lightRef.current.intensity,
+            targetIntensity,
+            0.1 // Vitesse de fade
+        );
+    });
     return (
         <group {...props} dispose={null}>
             <pointLight
-                position={[0, 10, 0]}
+                ref={lightRef}
+                position={[0, 5, 0]}
                 color="white"
-                intensity={isNight ? 500 : 0}
-                distance={50}
-                decay={2}
+                intensity={0}
+                distance={30}
+                decay={1}
             />
-            <group scale={0.03}>
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.factory_texture_factory_0.geometry}
-                    material={materials.texture_factory}
-                    position={[-27.925, 10.074, -37.812]}
-                    rotation={[-Math.PI / 2, 0, 0]}
-                    scale={100}
-                />
-            </group>
+            <RigidBody type='fixed' colliders="trimesh">
+                <group scale={0.03}>
+                    <mesh
+                        castShadow
+                        receiveShadow
+                        geometry={nodes.factory_texture_factory_0.geometry}
+                        material={materials.texture_factory}
+                        position={[-27.925, 10.074, -37.812]}
+                        rotation={[-Math.PI / 2, 0, 0]}
+                        scale={100}
+                    />
+                </group>
+            </RigidBody>
+
         </group>
     )
 }
 
-useGLTF.preload('/object3d/factory_lowpoly_free.glb')
+useGLTF.preload('/elements/factory_lowpoly_free.glb')

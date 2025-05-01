@@ -9,22 +9,20 @@ export function MyAvatar({ ...props }) {
   const group = useRef();
 
   // Charger l'animation de marche
-  const { animations: typingAnimation } = useFBX("/animations/Typing.fbx");
+  const { animations: typingAnimation } = useFBX("../animations/Typing.fbx");
   typingAnimation[0].name = "Typing";
 
   // Initialiser les animations
   const { actions } = useAnimations(typingAnimation, group);
 
   useEffect(() => {
-    
-    
-      actions["Typing"].reset().fadeIn(0.5).play();
-    
+    actions["Typing"].reset().fadeIn(0.5).play();
   }, []);
 
   return (
     <group scale={1}>
-      <group {...props} ref={group} dispose={null}>
+      <group {...props} ref={group} dispose={null} castShadow
+        receiveShadow>
         <primitive object={nodes.Hips} />
         <skinnedMesh
           name="EyeLeft"

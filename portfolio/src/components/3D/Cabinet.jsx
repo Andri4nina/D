@@ -6,7 +6,7 @@ import React, { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
 
 export function Cabinet(props) {
-  const { nodes, materials } = useGLTF('/object3d/Cabinet.glb')
+  const { nodes, materials } = useGLTF('/elements/Cabinet.glb')
   return (
     <group {...props} dispose={null} scale={2}>
       <mesh
@@ -229,4 +229,4 @@ export function Cabinet(props) {
   )
 }
 
-useGLTF.preload('/object3d/Cabinet.glb')
+useGLTF.preload('/elements/Cabinet.glb')

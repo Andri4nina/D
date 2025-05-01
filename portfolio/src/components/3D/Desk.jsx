@@ -10,7 +10,7 @@ import React, { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
 
 export function Desk(props) {
-    const { nodes, materials } = useGLTF('/object3d/desk.glb')
+    const { nodes, materials } = useGLTF('/elements/desk.glb')
     return (
         <group {...props} dispose={null}>
             <group rotation={[-Math.PI / 2, 0, 0]} scale={.35}>
@@ -187,5 +187,4 @@ export function Desk(props) {
     )
 }
 
-useGLTF.preload('/object3d/desk.glb')
-
+useGLTF.preload('/elements/desk.glb')

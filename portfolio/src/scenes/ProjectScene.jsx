@@ -1,120 +1,156 @@
-import React from 'react'
-import { OldRoom } from '../components/3D/OldRoom'
-import { RedBull } from '../components/3D/RedBull'
-import { Mclaren } from '../components/3D/McLaren'
-import { Scuderia } from '../components/3D/Scuderia'
-import { F1Tyre } from '../components/3D/F1Tyre'
-import { School } from '../components/3D/School'
-import { Garage } from '../components/3D/Garage'
-import { PostOffice } from '../components/3D/PostOffice'
-import { Shop } from '../components/3D/Shop'
-import { RadioTower } from '../components/3D/RadioTower'
-import { Restaurant } from '../components/3D/Restaurant'
-import { Hospital } from '../components/3D/Hospital'
-import { RedFactory } from '../components/3D/RedFactory'
-import { Iot } from '../components/3D/Iot'
-import { BusinessHouse } from '../components/3D/BusinessHouse'
+import React, { useRef } from 'react'
+import { useFrame, useThree } from '@react-three/fiber'
 
-const ProjectScene = ({ isNight }) => {
-  return (
-    <>
-      <group position={[-7, 0, 15]}>
-        <OldRoom isNight={isNight} />
-      </group>
+import { Text3D, useTexture } from '@react-three/drei';
+import { OldRoom } from '../components/3d/OldRoom';
+import { WoodSign } from '../components/3d/WoodSign';
+import { StonePath } from '../components/3d/stones/StonePath';
+import { Rocks } from '../components/3d/stones/Rocks';
+import { Cobblestone } from '../components/3d/stones/CobbleStoneTile';
+import { F1Car } from '../components/3d/F1Car';
 
-      <group position={[7, 0, 15]}>
-        <group position={[3, 0, 0]} rotation={[0, -Math.PI / 6, 0]}>
-          <Mclaren />
-        </group>
-        <group position={[0, 0, .35]} rotation={[0, 0, 0]}>
-          <Scuderia />
-        </group>
-        <group position={[-3, 0, 0]} rotation={[0, Math.PI / 6, 0]}>
-          <RedBull />
-        </group>
-        <group position={[-1, .1, 3]} rotation={[0, Math.PI / 2, 0]}>
-          <F1Tyre />
-        </group>
-        <pointLight
-          position={[0, 5, 0]}
-          color="white"
-          intensity={isNight ? 50 : 0}
-          distance={20}
-          decay={2}
-        />
-      </group>
+import { PostOffice } from '../components/3d/PostOffice';
+import * as THREE from 'three';
+import { Hopital, School } from '../components/3d/buildings/PublicBuildings';
+import { useDayNight } from '../contexts/DayNightContext';
+import { RadioTower } from '../components/3d/RadioTower';
+import { RedFactory } from '../components/3d/RedFactory';
+import { Restaurant } from '../components/3d/buildings/BusinessBuildings';
 
 
-      <group position={[30, 0, -9]} rotation={[0, Math.PI, 0]}>
-          <School isNight={isNight} />
-        </group>
+const MAX_LIGHT_DISTANCE = 50;
+const VISIBILITY_DISTANCE = 150;
 
-        <group position={[7, 0, 29.5]} rotation={[0, -Math.PI, 0]}>
-          <Garage isNight={isNight} />
-        </group>
+const DistanceGroup = ({ position, children }) => {
+    const groupRef = useRef();
+    const camera = useThree((state) => state.camera);
 
-        <group position={[-24, 0.05, 15]} rotation={[0, Math.PI / 2, 0]}>
-          <PostOffice isNight={isNight} />
-        </group>
+    useFrame(() => {
+        if (!groupRef.current) return;
+        const distance = camera.position.distanceTo(new THREE.Vector3(...position));
+        groupRef.current.visible = distance <= VISIBILITY_DISTANCE;
+    });
 
-        <group position={[-22, 0.05, 24]} rotation={[0, Math.PI, 0]}>
-          <Shop isNight={isNight} />
-        </group>
+    return <group ref={groupRef} position={position}>{children}</group>;
+};
 
-        <group position={[-26, 0.05, 24]} >
-          <RadioTower isNight={isNight} />
-        </group>
+const ProjectScene = () => {
+    const texture = useTexture("/textures/brick.jpg");
+    const { isNight } = useDayNight();
+    const lightRef = useRef();
+    const { camera } = useThree();
 
-        <group position={[-9.6, 0.05, 29.4]} rotation={[0, Math.PI / 2, 0]}>
-          <Restaurant isNight={isNight} />
-        </group>
+    useFrame(() => {
+        if (!lightRef.current) return;
 
-        <group position={[-48, 0.05, -20]} >
-          <Hospital isNight={isNight} />
-          <mesh
-            castShadow
-            receiveShadow
-            position={[-0, .05, 3]}
-            rotation={[Math.PI / 2, 0, Math.PI]}
+        const lanternPos = lightRef.current.getWorldPosition(new THREE.Vector3());
+        const distance = lanternPos.distanceTo(camera.position);
 
-          >
-            <boxGeometry args={[24, 40, .2]} /> {/* Ajustez les dimensions si nécessaire */}
-            <meshStandardMaterial
-              color="#a3a3a3"  // Couleur gris ciment
-              roughness={0.7}  // Surface légèrement rugueuse
-              metalness={0.1}  // Très faible réflexion métallique
-            />
-          </mesh>
-        </group>
+        const shouldLight = isNight && distance < MAX_LIGHT_DISTANCE;
+        const targetIntensity = shouldLight ? 5 : 0;
 
-        <group position={[41.5, 0.05, 33]} >
-          <RedFactory isNight={isNight} />
-          
-        </group>
+        lightRef.current.intensity = THREE.MathUtils.lerp(
+            lightRef.current.intensity,
+            targetIntensity,
+            0.1 // Vitesse de fade
+        );
+    });
 
-        <group position={[56.5, 2.6, 1]} >
-          <Iot isNight={isNight} />
-        </group>
+    return (
+        <>
+            <group>
+                {/* Ancient portfolio */}
+                <DistanceGroup position={[-7, 0, 15]}>
+                    <OldRoom />
 
-        <group position={[-121.5, 0, 13.5]} rotation={[0, -Math.PI, 0]}>
-          <BusinessHouse isNight={isNight} />
-          <mesh
-            castShadow
-            receiveShadow
-            position={[-73.5, .05, -9.5]}
-            rotation={[Math.PI / 2, 0, Math.PI]}
+                    <group position={[0, 0, 3]} scale={0.5} rotation={[0, -Math.PI, 0]}>
+                        <WoodSign label={'Ancient portfolio'} />
+                    </group>
+                    <group position={[3, 0, 3]}>
+                        <StonePath />
+                    </group>
+                    <group position={[3, 0, 1]}>
+                        <Rocks />
+                    </group>
+                    <group position={[3, 0, -1]}>
+                        <Rocks />
+                    </group>
+                    <group position={[3, 0, -3]}>
+                        <Cobblestone />
+                    </group>
+                </DistanceGroup>
 
-          >
-            <boxGeometry args={[24, 24, .2]} /> {/* Ajustez les dimensions si nécessaire */}
-            <meshStandardMaterial
-              color="#a3a3a3"  // Couleur gris ciment
-              roughness={0.7}  // Surface légèrement rugueuse
-              metalness={0.1}  // Très faible réflexion métallique
-            />
-          </mesh>
-        </group>
-    </>
-  )
-}
+                {/* F1 Area */}
+                <DistanceGroup position={[7, 0, 15]}>
+                    <F1Car />
+                    <group position={[3, 0, 0]}>
+                        <F1Car />
+                    </group>
+                    <group position={[-3, 0, 0]}>
+                        <F1Car />
+                    </group>
+                    <pointLight
+                        ref={lightRef}
+                        position={[-2, 2, 0]}
+                        color="white"
+                        intensity={0}
+                        distance={8}
+                        decay={1}
+                    />
+                    <group position={[0, 0, 3]} scale={0.5} rotation={[0, -Math.PI, 0]}>
+                        <WoodSign label={'Formula 1'} />
+                    </group>
+                </DistanceGroup>
 
-export default ProjectScene
+                {/* Poste Office */}
+                <DistanceGroup position={[-25, 0, 15]}>
+                    <group rotation={[0, Math.PI, 0]}>
+                        <PostOffice />
+                    </group>
+                </DistanceGroup>
+
+                {/* School */}
+                <DistanceGroup position={[49, 0, -2.4]}>
+                    <group rotation={[0, -Math.PI / 2, 0]}>
+                        <School />
+                    </group>
+                    <group position={[0, 0, -6]} scale={0.5} rotation={[0, -Math.PI, 0]}>
+                        <WoodSign />
+                    </group>
+                </DistanceGroup>
+
+                {/* Restaurant */}
+                <DistanceGroup position={[-23, 0, 49]} >
+                    <group rotation={[0, 2*Math.PI, 0]}>
+                        <Restaurant />
+                    </group>
+                </DistanceGroup >
+
+                {/* Hopital */}
+                <DistanceGroup position={[-43, 0, -17]}>
+                    <group >
+                        <Hopital />
+                    </group>
+                </DistanceGroup >
+
+                {/* Radio */}
+                <group position={[0, 0.05, 40]} >
+                    <RadioTower />
+                </group>
+
+                {/* Iot */}
+
+
+                {/* Warehouse */}
+                <group position={[41.5, 0.05, 33]} >
+                    <RedFactory />
+                </group>
+
+                {/* Business */}
+
+            </group >
+        </>
+    );
+};
+
+export default React.memo(ProjectScene);

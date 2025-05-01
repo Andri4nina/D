@@ -3,7 +3,7 @@ import { useGLTF } from "@react-three/drei";
 import { RigidBody } from "@react-three/rapier";
 
 export function Bed(props) {
-  const { nodes, materials } = useGLTF("/object3d/Bed.glb");
+  const { nodes, materials } = useGLTF("/elements/Bed.glb");
   return (
     <group {...props} dispose={null}>
       <RigidBody type="fixed" colliders="trimesh">
@@ -19,4 +19,4 @@ export function Bed(props) {
   );
 }
 
-useGLTF.preload("/object3d/Bed.glb");
+useGLTF.preload("/elements/Bed.glb");

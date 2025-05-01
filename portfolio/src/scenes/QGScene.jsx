@@ -1,119 +1,199 @@
-import React, { useMemo } from 'react';
-import Flag from '../components/3D/Flag';
-import BricksWall from '../components/3D/BricksWall';
-import NoticeBoard from '../components/3D/NoticeBoard';
-import MyHouse from '../components/3D/MyHouse';
+import React, { useMemo } from 'react'
+import { Instances, Instance, useTexture, Text3D } from '@react-three/drei'
+import Flag from '../components/3d/Flag'
+import NoticeBoard from '../components/3d/NoticeBoard'
+import MyHouse from '../components/3d/MyHouse'
+import { FenceEnd } from '../components/3d/FenceEnd'
+import { StonePath } from '../components/3d/stones/StonePath'
+import { Rocks } from '../components/3d/stones/Rocks'
+import { Cobblestone } from '../components/3d/stones/CobbleStoneTile'
+import { RigidBody } from '@react-three/rapier'
 
-const QGScene = ({ isNight }) => {
-  // Configuration mémoïsée des textures de drapeaux
-  const flagTextures = useMemo(() => [
-    "/textures/flags/Tailwind.jpg",
-    "/textures/flags/React.png",
-    "/textures/flags/NestJs.png",
-    "/textures/flags/Madagascar.jpg"
-  ], []);
 
-  // Configuration mémoïsée des murs
-  const wallsConfig = useMemo(() => {
-    const horizontalWalls = [-3, 3, -6, 6, -9, 9, -3, 3, 0, -6, 6, -9, 9].map(x => ({
-      position: [x, 0, x === 0 ? -19 : (Math.abs(x) >= 3 && Math.abs(x) <= 9) ? -19 : 0],
-      rotation: [0, 0, 0]
-    }));
+// Configuration externe pour permettre une réutilisation et un chargement plus facile
+const SCENE_CONFIG = {
+    flags: {
+        textures: [
+            "/textures/flags/Tailwind.jpg",
+            "/textures/flags/React.png",
+            "/textures/flags/NestJs.png",
+            "/textures/flags/Madagascar.jpg"
+        ],
+        positions: [
+            [9, 1, -9], [9, 1, -7.5], [9, 1, -6], [9, 1, -4.5]
+        ],
+        rotation: [0, -Math.PI / 6, 0]
+    },
+    noticeBoards: [
+        { position: [-6.5, 1, -7], rotation: [0, -Math.PI / 6, 0] },
+        { position: [-7, 1, -5], rotation: [0, 0, 0] },
+        { position: [-6.5, 1, -3], rotation: [0, Math.PI / 6, 0] }
+    ],
+    fences: {
+        xAxis: Array.from({ length: 6 }, (_, i) => [(i % 2 ? -1 : 1) * Math.ceil((i + 1) / 2), 0, 0]),
+        zAxis: Array.from({ length: 8 }, (_, i) => [(i % 2 ? -1 : 1) * Math.floor(i / 2), 0, -6.06]),
+        rotated: Array.from({ length: 12 }, (_, i) => ({
+            pos: [(i < 6 ? 3.53 : -3.53), 0, -0.53 - (i % 6)],
+            rot: [0, Math.PI / 2, 0]
+        }))
+    },
+    housePosition: [0, 0, -14],
+    groupScale: 1,
+    fenceScale: 3
+}
 
-    const verticalWalls = [-2, -5, -8, -11, -14, -17].map(z => ([
-      { position: [-10, 0, z], rotation: [0, Math.PI / 2, 0] },
-      { position: [10, 0, z], rotation: [0, Math.PI / 2, 0] }
-    ])).flat();
+const QgScene = () => {
+    // Utilisation de la configuration externe
+    const { flags, noticeBoards, fences, housePosition, groupScale, fenceScale } = SCENE_CONFIG
+    const texture = useTexture("/textures/brick.jpg");
+    // Composants optimisés avec React.memo et séparation des lumières
+    const FlagWithLight = React.memo(({ texture, position }) => (
+        <group position={position} rotation={flags.rotation}>
+            <Flag texture={texture} />
 
-    return [...horizontalWalls, ...verticalWalls];
-  }, []);
+        </group>
+    ))
 
-  // Configuration mémoïsée des panneaux d'affichage
-  const noticeBoardsConfig = useMemo(() => [
-    { position: [0.5, 0, -2], rotation: [0, -Math.PI / 6, 0] },
-    { position: [0, 0, 0], rotation: [0, 0, 0] },
-    { position: [0.5, 0, 2], rotation: [0, Math.PI / 6, 0] }
-  ], []);
+    const NoticeBoardWithLight = React.memo(({ position, rotation }) => (
+        <group position={position} rotation={rotation}>
+            <NoticeBoard />
+           
+        </group>
+    ))
 
-  return (
-    <>
-      {/* Murs optimisés */}
-      <group position={[0, 1, 0]} castShadow receiveShadow>
-        {wallsConfig.map((wall, index) => (
-          <BricksWall
-            key={`wall-${index}`}
-            position={wall.position}
-            rotation={wall.rotation}
-          />
-        ))}
-      </group>
+    const FenceInstance = React.memo(({ position, rotation = [0, 0, 0] }) => (
+        <group position={position} rotation={rotation}>
+            <FenceEnd />
+        </group>
+    ))
 
-      {/* Drapeaux optimisés */}
-      <group position={[6, 1, -9]}>
-        {flagTextures.map((texture, index) => (
-          <FlagGroup
-            key={`flag-${index}`}
-            position={[3, 0, index * 1.5]}
-            rotation={[0, -Math.PI / 6, 0]}
-            texture={texture}
-            isNight={isNight}
-          />
-        ))}
-      </group>
 
-      {/* Maison */}
-      <HouseGroup position={[0, 0, -14]} isNight={isNight} />
 
-      {/* Panneaux d'affichage optimisés */}
-      <group position={[-7, 1, -5]}>
-        {noticeBoardsConfig.map((config, index) => (
-          <NoticeBoardGroup
-            key={`notice-${index}`}
-            position={config.position}
-            rotation={config.rotation}
-            isNight={isNight}
-          />
-        ))}
-      </group>
-    </>
-  );
-};
+    const NoticeBoardLight = React.memo(() => (
+        <pointLight
+            position={[0.5, 1, 0]}
+            color="white"
+            intensity={2}
+            distance={20}
+            decay={2}
+        />
+    ))
 
-// Composants mémoïsés
-const FlagGroup = React.memo(({ position, rotation, texture, isNight }) => (
-  <group position={position} rotation={rotation}>
-    <Flag texture={texture} />
-    {isNight && (
-      <pointLight
-        position={[-1, 1, 0]}
-        color="white"
-        intensity={5}
-        distance={20}
-        decay={2}
-      />
-    )}
-  </group>
-));
+    // Créer un composant text réutilisable
+    const PortfolioText = ({ char, position }) => (
+        <RigidBody type="dynamic" colliders="cuboid" position={position}>
+            <Text3D font="/fonts/gentilis_bold.typeface.json" size={1} height={0.3}>
+                {char}
+                <meshStandardMaterial map={texture} />
+              </Text3D>
+        </RigidBody>
+    );
 
-const NoticeBoardGroup = React.memo(({ position, rotation, isNight }) => (
-  <group position={position} rotation={rotation}>
-    <NoticeBoard />
-    {isNight && (
-      <pointLight
-        position={[0.5, 1, 0]}
-        color="white"
-        intensity={2}
-        distance={20}
-        decay={2}
-      />
-    )}
-  </group>
-));
+    // Utilisation d'Instances pour les éléments répétitifs comme les clôtures
+    return (
+        <group scale={groupScale} >
+            {/* Drapeaux */}
+            <group>
+                {flags.textures.map((texture, index) => (
+                    <FlagWithLight
+                        key={`flag-${index}`}
+                        texture={texture}
+                        position={flags.positions[index]}
+                    />
+                ))}
+            </group>
 
-const HouseGroup = React.memo(({ position, isNight }) => (
-  <group position={position}>
-    <MyHouse isNight={isNight} />
-  </group>
-));
+            {/* Panneaux d'affichage */}
+            <group>
+                {noticeBoards.map((board, index) => (
+                    <NoticeBoardWithLight
+                        key={`notice-${index}`}
+                        position={board.position}
+                        rotation={board.rotation}
+                    />
+                ))}
+            </group>
 
-export default React.memo(QGScene);
+            {/* Maison */}
+            <group position={housePosition}>
+                <MyHouse  />
+            </group>
+
+            {/* Clôtures avec group scale appliqué une seule fois */}
+            <group scale={fenceScale}>
+                {/* Clôtures sur l'axe X */}
+                {fences.xAxis.map((pos, i) => (
+                    <FenceInstance key={`x-fence-${i}`} position={pos} />
+                ))}
+
+                {/* Clôtures sur l'axe Z */}
+                {fences.zAxis.map((pos, i) => (
+                    <FenceInstance key={`z-fence-${i}`} position={pos} />
+                ))}
+
+                {/* Clôtures rotatées */}
+                {fences.rotated.map((fence, i) => (
+                    <FenceInstance
+                        key={`rot-fence-${i}`}
+                        position={fence.pos}
+                        rotation={fence.rot}
+                    />
+                ))}
+            </group>
+
+            {/* Chemin et pierres */}
+            <group>
+                {/* Cobblestones - regroupés quand possible */}
+                <group position={[0, 0, 0]}>
+                    <Cobblestone position={[0, 0, 0]} />
+                    <Cobblestone position={[0, 0, -1.8]} />
+                    <Cobblestone position={[0, 0, -3.6]} />
+                    <Cobblestone position={[-1.8, 0, -3.6]} />
+                    <Cobblestone position={[-2.7, 0, -5.3]} />
+                    <Cobblestone position={[-2.7, 0, -7.1]} />
+                    <Cobblestone position={[-0.9, 0, -8.9]} />
+                </group>
+
+                {/* StonePaths - instances avec rotation */}
+                <StonePath position={[-2.7, 0, -9.0]} />
+                <StonePath position={[-4.5, 0, -10.9]} rotation={[0, -Math.PI / 2, 0]} />
+                <StonePath position={[1.8, 0, -10.9]} rotation={[0, Math.PI / 3, 0]} />
+                <StonePath position={[-1.5, 0, -10.9]} rotation={[0, Math.PI / 3, 0]} />
+                <StonePath position={[1.8, 0, -2.7]} />
+
+                {/* Rocks - instances avec rotation */}
+                <Rocks position={[-2.7, 0, -10.9]} rotation={[0, -Math.PI, 0]} />
+                <Rocks position={[4.5, 0, -10.9]} rotation={[0, Math.PI / 3, 0]} />
+                <Rocks position={[3.4, 0, -10.9]} rotation={[0, Math.PI / 3, 0]} />
+                <Rocks position={[0, 0, -10.9]} />
+                <Rocks position={[2, 0, -4]} />
+                <Rocks position={[2, 0, -1]} />
+                <Rocks position={[-2, 0, -1]} />
+                <Rocks position={[4, 0, -1]} rotation={[0, -Math.PI / 2, 0]} />
+                <Rocks position={[-4, 0, -2]} rotation={[0, -Math.PI / 2, 0]} />
+                <Rocks position={[4, 0, -3]} rotation={[0, -Math.PI, 0]} />
+            </group>
+
+          
+
+            <group>
+                {/* Portfolio */}
+                <group position={[-10, 0, 1]}>
+                    {["P", "o", "r", "t", "f", "o", "l", "i", "o"].map((char, i) => (
+                        <PortfolioText key={`p-${i}`} char={char} position={[i * 0.7, 0, 0]} />
+                    ))}
+                </group>
+
+                {/* retneC */}
+                <group position={[10, 0, 1]}>
+                    {["r", "e", "t", "n", "e", "C"].map((char, i) => (
+                        <PortfolioText key={`c-${i}`} char={char} position={[-i * 0.7, 0, 0]} />
+                    ))}
+                </group>
+            </group>
+
+        </group>
+    )
+}
+
+export default React.memo(QgScene)

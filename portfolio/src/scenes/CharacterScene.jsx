@@ -1,31 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { Drone } from '../components/3d/Drone';
+import { charactersAtom, socket } from '../components/SocketManager';
+import React, { useEffect, useRef } from 'react';
 import { RigidBody } from '@react-three/rapier';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
-
-import { charactersAtom, socket } from '../components/SocketManager';
 import { useAtom } from 'jotai';
-import { Drone } from '../components/3D/Drone';
 
 const CharacterScene = ({ isNight, droneColor }) => {
   const rigidBodyRef = useRef(null);
   const droneRef = useRef(null);
   const { camera } = useThree();
-  const [keyboardLayout] = useState('qwerty');
-  const [targetAltitude, setTargetAltitude] = useState(0);
-  const [isMoving, setIsMoving] = useState(false);
   const [characters, setCharacters] = useAtom(charactersAtom);
-  const [mouseRotation, setMouseRotation] = useState({ y: 0 });
-
-  // Paramètres
-  const mouseSensitivity = 0.02;
-  const cameraDistance = 8;
-  const cameraHeight = 3;
-  const moveSpeed = 0.1;
-  const tiltAmount = 0.1;
-  const maxSpeed = 5;
-  const altitudeTolerance = 0.1;
-  const altitudeAdjustSpeed = 0.005;
 
   const controls = useRef({
     forward: false,
@@ -36,6 +21,27 @@ const CharacterScene = ({ isNight, droneColor }) => {
     descend: false
   });
 
+  const isMovingRef = useRef(false);
+  const mouseRotation = useRef({ y: 0 });
+  const targetAltitudeRef = useRef(5);
+
+  const moveSpeed = 5;
+  const tiltAmount = 0.1;
+  const maxSpeed = 20;
+  const altitudeTolerance = 0.1;
+  const altitudeAdjustSpeed = 2;
+  const cameraDistance = 8;
+  const cameraHeight = 3;
+  const mouseSensitivity = 0.02;
+
+  // Vecteurs pré-alloués pour éviter new Vector3() à chaque frame
+  const forwardDirRef = useRef(new THREE.Vector3());
+  const leftDirRef = useRef(new THREE.Vector3());
+  const targetVelocityRef = useRef(new THREE.Vector3());
+  const smoothedVelocityRef = useRef(new THREE.Vector3());
+  const cameraOffsetRef = useRef(new THREE.Vector3());
+  const rotationEulerRef = useRef(new THREE.Euler());
+
   const getKeyMap = () => ({
     forward: 's',
     backward: 'w',
@@ -45,14 +51,13 @@ const CharacterScene = ({ isNight, droneColor }) => {
     descend: 'shift'
   });
 
-  // Gestion des entrées
   useEffect(() => {
     const keyMap = getKeyMap();
 
     const handleKeyDown = (e) => {
       const key = e.key.toLowerCase();
-      if (key === 'p') setIsMoving(prev => !prev);
-      if (!isMoving) return;
+      if (key === 'p') isMovingRef.current = !isMovingRef.current;
+      if (!isMovingRef.current) return;
 
       if (key === keyMap.forward) controls.current.forward = true;
       if (key === keyMap.backward) controls.current.backward = true;
@@ -64,6 +69,7 @@ const CharacterScene = ({ isNight, droneColor }) => {
 
     const handleKeyUp = (e) => {
       const key = e.key.toLowerCase();
+      if (!isMovingRef.current) return;
       const keyMap = getKeyMap();
 
       if (key === keyMap.forward) controls.current.forward = false;
@@ -75,10 +81,8 @@ const CharacterScene = ({ isNight, droneColor }) => {
     };
 
     const handleMouseMove = (e) => {
-      if (!isMoving) return;
-      setMouseRotation(prev => ({
-        y: prev.y - e.movementX * -mouseSensitivity
-      }));
+      if (!isMovingRef.current) return;
+      mouseRotation.current.y -= e.movementX * -mouseSensitivity;
     };
 
     window.addEventListener('keydown', handleKeyDown);
@@ -90,121 +94,104 @@ const CharacterScene = ({ isNight, droneColor }) => {
       window.removeEventListener('keyup', handleKeyUp);
       window.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [isMoving]);
+  }, []);
 
-  // Logique de mouvement
   useFrame((state, delta) => {
     if (!rigidBodyRef.current || !droneRef.current) return;
-
     const rigidbody = rigidBodyRef.current;
-    const drone = droneRef.current;
     const { forward, backward, left, right, ascend, descend } = controls.current;
     const position = rigidbody.translation();
 
     // Gestion altitude
-    if (isMoving) {
-      if (ascend) setTargetAltitude(prev => prev + delta * 2);
-      if (descend) setTargetAltitude(prev => Math.max(0, prev - delta * 2));
+    if (isMovingRef.current) {
+      if (ascend) targetAltitudeRef.current += delta * 2;
+      if (descend) targetAltitudeRef.current = Math.max(0, targetAltitudeRef.current - delta * 2);
     }
 
-    // Calcul altitude
-    const altitudeDifference = targetAltitude - position.y;
-    const impulse = new THREE.Vector3();
-
+    const altitudeDifference = targetAltitudeRef.current - position.y;
     if (Math.abs(altitudeDifference) > altitudeTolerance) {
-      const lift = Math.min(Math.max(altitudeDifference * altitudeAdjustSpeed, -0.5), 0.5);
-      impulse.y += lift;
+      rigidbody.setLinvel(new THREE.Vector3(
+        rigidbody.linvel().x,
+        altitudeDifference * altitudeAdjustSpeed,
+        rigidbody.linvel().z
+      ), true);
     }
 
-    // Mouvement
-    if (isMoving) {
-      const forwardDir = new THREE.Vector3(
-        Math.sin(mouseRotation.y),
-        0,
-        Math.cos(mouseRotation.y)
-      ).normalize();
+    if (isMovingRef.current) {
+      const forwardDir = forwardDirRef.current;
+      forwardDir.set(Math.sin(mouseRotation.current.y), 0, Math.cos(mouseRotation.current.y)).normalize();
 
-      const leftDir = new THREE.Vector3().crossVectors(
-        new THREE.Vector3(0, 1, 0),
-        forwardDir
-      ).normalize();
+      const leftDir = leftDirRef.current;
+      leftDir.crossVectors(new THREE.Vector3(0, 1, 0), forwardDir).normalize();
 
-      if (forward) impulse.add(forwardDir.multiplyScalar(moveSpeed));
-      if (backward) impulse.add(forwardDir.multiplyScalar(-moveSpeed * 0.5));
-      if (left) impulse.add(leftDir.multiplyScalar(-moveSpeed * 0.5));
-      if (right) impulse.add(leftDir.multiplyScalar(moveSpeed * 0.5));
+      const targetVelocity = targetVelocityRef.current;
+      targetVelocity.set(0, 0, 0);
+      if (forward) targetVelocity.add(forwardDir.clone().multiplyScalar(moveSpeed));
+      if (backward) targetVelocity.add(forwardDir.clone().multiplyScalar(-moveSpeed));
+      if (left) targetVelocity.add(leftDir.clone().multiplyScalar(-moveSpeed));
+      if (right) targetVelocity.add(leftDir.clone().multiplyScalar(moveSpeed));
 
-      // Rotation - méthode sécurisée
+      const currentVelocity = rigidbody.linvel();
+      const smoothedVelocity = smoothedVelocityRef.current;
+      smoothedVelocity.set(
+        THREE.MathUtils.lerp(currentVelocity.x, targetVelocity.x, 0.2),
+        currentVelocity.y,
+        THREE.MathUtils.lerp(currentVelocity.z, targetVelocity.z, 0.2)
+      );
+
+      rigidbody.setLinvel(smoothedVelocity, true);
+
       const newRotation = new THREE.Quaternion().setFromEuler(
-        new THREE.Euler(0, mouseRotation.y, 0)
+        new THREE.Euler(0, mouseRotation.current.y, 0)
       );
       rigidbody.setRotation(newRotation, true);
+    } else {
+      rigidbody.setLinvel(new THREE.Vector3(
+        rigidbody.linvel().x,
+        rigidbody.linvel().y * 0.98,
+        rigidbody.linvel().z
+      ), true);
+      targetAltitudeRef.current = position.y;
     }
 
-    rigidbody.applyImpulse(impulse, true);
-
-    // Limite vitesse
-    const linvel = rigidbody.linvel();
-    const currentSpeed = Math.sqrt(linvel.x * linvel.x + linvel.y * linvel.y + linvel.z * linvel.z);
-
-    if (currentSpeed > maxSpeed) {
-      const brakeFactor = -0.1 * (currentSpeed - maxSpeed) / currentSpeed;
-      const brake = new THREE.Vector3(
-        linvel.x * brakeFactor,
-        linvel.y * brakeFactor,
-        linvel.z * brakeFactor
-      );
-      rigidbody.applyImpulse(brake, true);
+    if (droneRef.current) {
+      const drone = droneRef.current;
+      drone.rotation.x = THREE.MathUtils.lerp(drone.rotation.x, backward ? -tiltAmount : (forward ? tiltAmount : 0), 0.1);
+      drone.rotation.z = THREE.MathUtils.lerp(drone.rotation.z, left ? tiltAmount : (right ? -tiltAmount : 0), 0.1);
     }
 
-    // Inclinaison drone
-    if (drone) {
-      const targetRotation = new THREE.Euler(
-        backward ? -tiltAmount : (forward ? tiltAmount : 0),
-        mouseRotation.y,
-        left ? tiltAmount : (right ? -tiltAmount : 0),
-        'YXZ'
-      );
-
-      drone.rotation.x = THREE.MathUtils.lerp(drone.rotation.x, targetRotation.x, 0.1);
-      drone.rotation.z = THREE.MathUtils.lerp(drone.rotation.z, targetRotation.z, 0.1);
-    }
-
-    // Caméra
-    const cameraOffset = new THREE.Vector3(
-      Math.sin(mouseRotation.y) * cameraDistance,
+    const cameraOffset = cameraOffsetRef.current;
+    cameraOffset.set(
+      Math.sin(mouseRotation.current.y) * cameraDistance,
       cameraHeight,
-      Math.cos(mouseRotation.y) * cameraDistance
+      Math.cos(mouseRotation.current.y) * cameraDistance
     );
     camera.position.copy(position).add(cameraOffset);
     camera.lookAt(position.x, position.y + 1, position.z);
   });
 
-  // Synchronisation réseau
   useEffect(() => {
     if (!socket) return;
 
     const interval = setInterval(() => {
-      if (rigidBodyRef.current) {
-        const rigidbody = rigidBodyRef.current;
-        const position = rigidbody.translation();
-        const rotation = new THREE.Euler().setFromQuaternion(
-          new THREE.Quaternion().copy(rigidbody.rotation())
-        );
+      if (!rigidBodyRef.current) return;
+      const rigidbody = rigidBodyRef.current;
+      const position = rigidbody.translation();
+      const rotationEuler = rotationEulerRef.current;
 
-        socket.emit('updateCharacter', {
-          position: [position.x, position.y, position.z],
-          rotation: [rotation.x, rotation.y, rotation.z],
-          color: droneColor,
-          isMoving,
-        });
-      }
+      rotationEuler.setFromQuaternion(new THREE.Quaternion().copy(rigidbody.rotation()));
+
+      socket.emit('updateCharacter', {
+        position: [position.x, position.y, position.z],
+        rotation: [rotationEuler.x, rotationEuler.y, rotationEuler.z],
+        color: droneColor,
+        isMoving: isMovingRef.current,
+      });
     }, 200);
 
     return () => clearInterval(interval);
-  }, [isMoving, droneColor, socket]);
+  }, [droneColor]);
 
-  // Gestion des déconnexions
   useEffect(() => {
     if (!socket) return;
 
@@ -216,9 +203,8 @@ const CharacterScene = ({ isNight, droneColor }) => {
     return () => {
       socket.off('playerDisconnected', handleDisconnect);
     };
-  }, [setCharacters, socket]);
+  }, [setCharacters]);
 
-  // Rendu des autres joueurs
   const otherCharacters = characters
     .filter(character => character.id !== socket?.id)
     .map(character => {
@@ -227,31 +213,11 @@ const CharacterScene = ({ isNight, droneColor }) => {
 
       return (
         <group key={character.id} position={position}>
-          <RigidBody
-            colliders="cuboid"
-            position={[0, 5, 0]}
-            type="dynamic"
-            enabledRotations={[false, true, false]}
-            linearDamping={0.25}
-            angularDamping={0.5}
-            gravityScale={0.2}
-          >
             <Drone
               color={character.color}
               isMoving={character.isMoving}
               rotation={new THREE.Euler(rotation[0], rotation[1], rotation[2])}
             />
-          </RigidBody>
-
-          {isNight && (
-            <pointLight
-              position={[0, 1.5, 0]}
-              color="white"
-              intensity={5}
-              distance={20}
-              decay={2}
-            />
-          )}
         </group>
       );
     });
@@ -264,21 +230,13 @@ const CharacterScene = ({ isNight, droneColor }) => {
         position={[0, 5, 0]}
         type="dynamic"
         enabledRotations={[false, true, false]}
-        linearDamping={0.25}
-        angularDamping={0.5}
-        gravityScale={0.2}
+        linearDamping={0.5}
+        angularDamping={0.7}
+        gravityScale={isMovingRef.current ? 0 : 1}
       >
         <group ref={droneRef}>
-          <Drone isMoving={isMoving} color={droneColor} />
-          {isNight && (
-            <pointLight
-              position={[0, 2, 0]}
-              color="white"
-              intensity={5}
-              distance={20}
-              decay={2}
-            />
-          )}
+          <Drone isMoving={isMovingRef.current} color={droneColor} />
+          
         </group>
       </RigidBody>
 

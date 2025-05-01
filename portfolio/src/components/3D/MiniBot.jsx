@@ -4,7 +4,7 @@ import * as THREE from "three";
 import { useFrame } from '@react-three/fiber';
 
 export function MiniBot(props) {
-  const { nodes, materials } = useGLTF('/object3d/MiniBot.glb');
+  const { nodes, materials } = useGLTF('/elements/MiniBot.glb');
   const botRef = useRef();
 
   useEffect(() => {
@@ -232,4 +232,4 @@ export function MiniBot(props) {
   )
 }
 
-useGLTF.preload('/object3d/MiniBot.glb')
+useGLTF.preload('/elements/MiniBot.glb')

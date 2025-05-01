@@ -18,7 +18,8 @@ export function AndoAvatar(props) {
 
   return (
     <group scale={1}>
-      <group {...props} ref={group} dispose={null}>
+      <group {...props} ref={group} dispose={null}    castShadow
+                        receiveShadow>
         <primitive object={nodes.Hips} />
         <skinnedMesh
           name="EyeLeft"

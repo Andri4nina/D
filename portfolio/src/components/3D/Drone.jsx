@@ -2,19 +2,33 @@
 
 import React, { useEffect, useMemo, useRef } from 'react'
 import { useGLTF, useAnimations } from '@react-three/drei'
-import { useGraph } from '@react-three/fiber'
+import { useFrame, useGraph } from '@react-three/fiber'
 import { SkeletonUtils } from "three-stdlib"
-import { RigidBody } from '@react-three/rapier'
+import { useDayNight } from '../../contexts/DayNightContext'
+import * as THREE from 'three';
 
-
-export function Drone({ isMoving, setIsMoving, color = "red", ...props }) {
+export function Drone({ isMoving, color = "red", ...props }) {
   const group = useRef()
-  const { scene, materials, animations } = useGLTF('/object3d/drone_2.glb')
+  const { isNight } = useDayNight();
+  const lightRef = useRef();
+  const { scene, materials, animations } = useGLTF('/elements/drone_2.glb')
   const { actions } = useAnimations(animations, group)
 
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene])
 
   const { nodes } = useGraph(clone)
+
+  useFrame(() => {
+    if (!lightRef.current) return;
+    const shouldLight = isNight
+    const targetIntensity = shouldLight ? 50 : 0;
+
+    lightRef.current.intensity = THREE.MathUtils.lerp(
+      lightRef.current.intensity,
+      targetIntensity,
+      0.1 // Vitesse de fade
+    );
+  });
 
   useEffect(() => {
     if (actions && actions["hover"]) {
@@ -31,6 +45,13 @@ export function Drone({ isMoving, setIsMoving, color = "red", ...props }) {
   return (
 
     <group ref={group} {...props} dispose={null}  >
+      <pointLight
+        ref={lightRef}
+        color="green"
+        intensity={0}
+        distance={20}
+        decay={1}
+      />
 
       <group name="Sketchfab_Scene" scale={.3} rotation={[0, -Math.PI, 0]}>
 
@@ -60,10 +81,9 @@ export function Drone({ isMoving, setIsMoving, color = "red", ...props }) {
         </group>
 
       </group>
-
     </group >
 
   )
 }
 
-useGLTF.preload('/object3d/drone_2.glb')
+useGLTF.preload('/elements/drone_2.glb')

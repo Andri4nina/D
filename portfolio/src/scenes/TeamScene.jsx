@@ -1,5 +1,5 @@
 import React from 'react';
-import Billboard from '../components/3D/Billboard';
+import Billboard from '../components/3d/Billboard';
 
 
 const TeamScene = () => {

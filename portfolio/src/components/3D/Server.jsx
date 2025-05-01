@@ -8,7 +8,7 @@ import { RigidBody } from "@react-three/rapier";
 
 export function Server(props) {
   const { nodes, materials } = useGLTF(
-    "/object3d/server rack.glb"
+    "/elements/server rack.glb"
   );
   return (
     <group {...props} dispose={null} scale={.5}>
@@ -117,4 +117,4 @@ export function Server(props) {
   );
 }
 
-useGLTF.preload("/object3d/server rack.glb");
+useGLTF.preload("/elements/server rack.glb");

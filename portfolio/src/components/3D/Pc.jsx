@@ -13,7 +13,7 @@ import { useFrame } from "@react-three/fiber";
 
 
 export function Pc(props) {
-  const { nodes, materials } = useGLTF("/object3d/Pc.glb");
+  const { nodes, materials } = useGLTF("/elements/Pc.glb");
   const screenTexture = useTexture("/textures/ScreenCode.png");
 
   const screenRef = useRef();
@@ -41,9 +41,6 @@ export function Pc(props) {
       if (screenTexture.offset.y > 0) screenTexture.offset.y = 0; // Limiter le retour à la position d'origine
     }
   });
-
-
-
   useEffect(() => {
     // D'abord, rester immobile pendant la durée de idle
     const idleTimeout = setTimeout(() => {
@@ -207,4 +204,4 @@ export function Pc(props) {
   );
 }
 
-useGLTF.preload("/object3d/Pc.glb");
+useGLTF.preload("/elements/Pc.glb");

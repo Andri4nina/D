@@ -14,7 +14,7 @@ const Billboard = ({ texture }) => {
     const lampsConfig = useMemo(() => [1, -1, 0, 2, -2], []);
 
     return (
-        <RigidBody type="fixed">
+        <RigidBody type="fixed" colliders="trimesh">
             <group>
                 {/* Structure principale */}
                 <mesh position={[0, 0.25, 0]} geometry={new THREE.BoxGeometry(1, 0.5, 1)} material={blackMaterial} />

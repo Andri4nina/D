@@ -2,36 +2,36 @@ import React, { useEffect, useRef } from 'react'
 import { useGLTF, useAnimations } from '@react-three/drei'
 
 export function Holoprojector(props) {
-    const group = useRef();
-    const { nodes, materials, animations } = useGLTF('/object3d/Holoprojector.glb');
-    const { actions } = useAnimations(animations, group);
-  
-    useEffect(() => {
-        if (!actions) return;
-      
-        // 1️⃣ Lancer ComingHolo
-        actions.ComingHolo?.reset().fadeIn(0.5).play();
-      
-        setTimeout(() => {
-          // 2️⃣ Transition vers ViewHolo après 8s
-          actions.ComingHolo?.fadeOut(0.5);
-          actions.ViewHolo?.reset().fadeIn(0.5).play();
-        }, 8000); 
-      
-        setTimeout(() => {
-          // 3️⃣ Transition vers Idle après 7s
-          actions.ViewHolo?.fadeOut(0.5);
-          actions.Idle?.reset().fadeIn(0.5).play();
-        }, 15000); // 8s + 7s = 15s
-      
-        setTimeout(() => {
-          // 4️⃣ Transition vers HoloEnd après 12s
-          actions.Idle?.fadeOut(0.5);
-          actions.HoloEnd?.reset().fadeIn(0.5).play();
-        }, 27000); // 15s + 12s = 27s
-      
-      }, [actions]);
-      
+  const group = useRef();
+  const { nodes, materials, animations } = useGLTF('/elements/Holoprojector.glb');
+  const { actions } = useAnimations(animations, group);
+
+  useEffect(() => {
+    if (!actions) return;
+
+    // 1️⃣ Lancer ComingHolo
+    actions.ComingHolo?.reset().fadeIn(0.5).play();
+
+    setTimeout(() => {
+      // 2️⃣ Transition vers ViewHolo après 8s
+      actions.ComingHolo?.fadeOut(0.5);
+      actions.ViewHolo?.reset().fadeIn(0.5).play();
+    }, 8000);
+
+    setTimeout(() => {
+      // 3️⃣ Transition vers Idle après 7s
+      actions.ViewHolo?.fadeOut(0.5);
+      actions.Idle?.reset().fadeIn(0.5).play();
+    }, 15000); // 8s + 7s = 15s
+
+    setTimeout(() => {
+      // 4️⃣ Transition vers HoloEnd après 12s
+      actions.Idle?.fadeOut(0.5);
+      actions.HoloEnd?.reset().fadeIn(0.5).play();
+    }, 27000); // 15s + 12s = 27s
+
+  }, [actions]);
+
   return (
     <group ref={group} {...props} dispose={null} scale={.2}>
       <group name="Sketchfab_Scene">
@@ -70,4 +70,4 @@ export function Holoprojector(props) {
   )
 }
 
-useGLTF.preload('/object3d/Holoprojector.glb')
+useGLTF.preload('/elements/Holoprojector.glb')
