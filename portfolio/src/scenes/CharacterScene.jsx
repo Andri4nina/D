@@ -1,4 +1,4 @@
-import { Drone } from '../components/3d/Drone';
+import { Drone } from '../components3D/Drone';
 import { charactersAtom, socket } from '../components/SocketManager';
 import React, { useEffect, useRef } from 'react';
 import { RigidBody } from '@react-three/rapier';
@@ -213,11 +213,11 @@ const CharacterScene = ({ droneColor }) => {
 
       return (
         <group key={character.id} position={position}>
-            <Drone
-              color={character.color}
-              isMoving={character.isMoving}
-              rotation={new THREE.Euler(rotation[0], rotation[1], rotation[2])}
-            />
+          <Drone
+            color={character.color}
+            isMoving={character.isMoving}
+            rotation={new THREE.Euler(rotation[0], rotation[1], rotation[2])}
+          />
         </group>
       );
     });
@@ -236,7 +236,7 @@ const CharacterScene = ({ droneColor }) => {
       >
         <group ref={droneRef}>
           <Drone isMoving={isMovingRef.current} color={droneColor} />
-          
+
         </group>
       </RigidBody>
 

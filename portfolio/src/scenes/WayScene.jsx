@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
-import Carrefour from '../components/3d/ways/Carrefour';
-import TurnT from '../components/3d/ways/TurnT';
-import { StreetStraight } from '../components/3d/ways/StreetStraight';
-import { Turn } from '../components/3d/ways/Turn';
+import Carrefour from '../components3D/ways/Carrefour';
+import TurnT from '../components3D/ways/TurnT';
+import { StreetStraight } from '../components3D/ways/StreetStraight';
+import { Turn } from '../components3D/ways/Turn';
 
 
 const WayScene = () => {
@@ -31,7 +31,7 @@ const WayScene = () => {
       { position: [-32, 0, 8], rotation: [0, 0, 0] },
 
       /* Gas Station */
-      { position: [-64, 0, 8], rotation: [0, Math.PI/2, 0] },
+      { position: [-64, 0, 8], rotation: [0, Math.PI / 2, 0] },
     ],
 
     turnTs: [
@@ -56,11 +56,11 @@ const WayScene = () => {
 
       /* Gas Station */
       { position: [-32, 0, 40], rotation: [0, Math.PI, 0] },
-      { position: [-64, 0, 40], rotation: [0, Math.PI/2, 0] },
+      { position: [-64, 0, 40], rotation: [0, Math.PI / 2, 0] },
 
       /* Hospital */
       { position: [-64, 0, -40], rotation: [0, 0, 0] },
-      { position: [-32, 0, -40], rotation: [0, -Math.PI/2, 0] },
+      { position: [-32, 0, -40], rotation: [0, -Math.PI / 2, 0] },
     ],
 
     streets: [
@@ -134,38 +134,38 @@ const WayScene = () => {
       { position: [-16, 0, 32], rotation: [0, 0, 0] },
 
       /* Poste */
-      { position: [-24, 0, 8], rotation: [0, Math.PI/2, 0] },
+      { position: [-24, 0, 8], rotation: [0, Math.PI / 2, 0] },
       { position: [-32, 0, 16], rotation: [0, 0, 0] },
       { position: [-32, 0, 24], rotation: [0, 0, 0] },
       { position: [-32, 0, 32], rotation: [0, 0, 0] },
 
       /* Gas Station */
-      { position: [-40, 0, 40], rotation: [0, Math.PI/2, 0] },
-      { position: [-48, 0, 40], rotation: [0, Math.PI/2, 0] },
-      { position: [-56, 0, 40], rotation: [0, Math.PI/2, 0] },
+      { position: [-40, 0, 40], rotation: [0, Math.PI / 2, 0] },
+      { position: [-48, 0, 40], rotation: [0, Math.PI / 2, 0] },
+      { position: [-56, 0, 40], rotation: [0, Math.PI / 2, 0] },
       { position: [-64, 0, 16], rotation: [0, 0, 0] },
       { position: [-64, 0, 24], rotation: [0, 0, 0] },
       { position: [-64, 0, 32], rotation: [0, 0, 0] },
-      { position: [-40, 0, 8], rotation: [0, Math.PI/2, 0] },
-      { position: [-48, 0, 8], rotation: [0, Math.PI/2, 0] },
-      { position: [-56, 0, 8], rotation: [0, Math.PI/2, 0] },
-      { position: [-72, 0, 8], rotation: [0, Math.PI/2, 0] },
+      { position: [-40, 0, 8], rotation: [0, Math.PI / 2, 0] },
+      { position: [-48, 0, 8], rotation: [0, Math.PI / 2, 0] },
+      { position: [-56, 0, 8], rotation: [0, Math.PI / 2, 0] },
+      { position: [-72, 0, 8], rotation: [0, Math.PI / 2, 0] },
 
       /* Hospital */
       { position: [-64, 0, 0], rotation: [0, 0, 0] },
       { position: [-64, 0, -8], rotation: [0, 0, 0] },
       { position: [-64, 0, -16], rotation: [0, 0, 0] },
-      { position: [-64, 0,-24], rotation: [0, 0, 0] },
+      { position: [-64, 0, -24], rotation: [0, 0, 0] },
       { position: [-64, 0, -32], rotation: [0, 0, 0] },
       { position: [-32, 0, 0], rotation: [0, 0, 0] },
       { position: [-32, 0, -8], rotation: [0, 0, 0] },
       { position: [-32, 0, -16], rotation: [0, 0, 0] },
-      { position: [-32, 0,-24], rotation: [0, 0, 0] },
+      { position: [-32, 0, -24], rotation: [0, 0, 0] },
       { position: [-32, 0, -32], rotation: [0, 0, 0] },
-      { position: [-40, 0, -40], rotation: [0, Math.PI/2, 0] },
-      { position: [-48, 0, -40], rotation: [0, Math.PI/2, 0] },
-      { position: [-56, 0, -40], rotation: [0, Math.PI/2, 0] },
-   
+      { position: [-40, 0, -40], rotation: [0, Math.PI / 2, 0] },
+      { position: [-48, 0, -40], rotation: [0, Math.PI / 2, 0] },
+      { position: [-56, 0, -40], rotation: [0, Math.PI / 2, 0] },
+
     ]
 
   }), []);

@@ -1,9 +1,9 @@
-import { Lantern } from '../components/3d/Lantern'
+import { Lantern } from '../components3D/Lantern'
 import React, { useMemo, useRef, useEffect } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
-const LanternInstances = ({ positions,  }) => {
+const LanternInstances = ({ positions, }) => {
   const groupRef = useRef()
   const visibilityRef = useRef(new Array(positions.length).fill(true))
   const frustumRef = useRef(new THREE.Frustum())
@@ -68,7 +68,7 @@ const LanternScene = () => {
     [-7, 0, 18],
     /* Lantern sur F1 */
     [7, 0, 18],
-   
+
   ], [])
 
   return <LanternInstances positions={positions} />

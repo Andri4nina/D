@@ -2,20 +2,20 @@ import React, { useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 
 import { Text3D, useTexture } from '@react-three/drei';
-import { OldRoom } from '../components/3d/OldRoom';
-import { WoodSign } from '../components/3d/WoodSign';
-import { StonePath } from '../components/3d/stones/StonePath';
-import { Rocks } from '../components/3d/stones/Rocks';
-import { Cobblestone } from '../components/3d/stones/CobbleStoneTile';
-import { F1Car } from '../components/3d/F1Car';
+import { OldRoom } from '../components3D/OldRoom';
+import { WoodSign } from '../components3D/WoodSign';
+import { StonePath } from '../components3D/stones/StonePath';
+import { Rocks } from '../components3D/stones/Rocks';
+import { Cobblestone } from '../components3D/stones/CobbleStoneTile';
+import { F1Car } from '../components3D/F1Car';
 
-import { PostOffice } from '../components/3d/PostOffice';
+import { PostOffice } from '../components3D/PostOffice';
 import * as THREE from 'three';
-import { Hopital, School } from '../components/3d/buildings/PublicBuildings';
+import { Hopital, School } from '../components3D/buildings/PublicBuildings';
 import { useDayNight } from '../contexts/DayNightContext';
-import { RadioTower } from '../components/3d/RadioTower';
-import { RedFactory } from '../components/3d/RedFactory';
-import { Restaurant } from '../components/3d/buildings/BusinessBuildings';
+import { RadioTower } from '../components3D/RadioTower';
+import { RedFactory } from '../components3D/RedFactory';
+import { Restaurant } from '../components3D/buildings/BusinessBuildings';
 
 
 const MAX_LIGHT_DISTANCE = 50;
@@ -121,7 +121,7 @@ const ProjectScene = () => {
 
                 {/* Restaurant */}
                 <DistanceGroup position={[-23, 0, 49]} >
-                    <group rotation={[0, 2*Math.PI, 0]}>
+                    <group rotation={[0, 2 * Math.PI, 0]}>
                         <Restaurant />
                     </group>
                 </DistanceGroup >

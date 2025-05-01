@@ -1,12 +1,12 @@
 import React, { useMemo } from 'react'
 import { Instances, Instance, useTexture, Text3D } from '@react-three/drei'
-import Flag from '../components/3d/Flag'
-import NoticeBoard from '../components/3d/NoticeBoard'
-import MyHouse from '../components/3d/MyHouse'
-import { FenceEnd } from '../components/3d/FenceEnd'
-import { StonePath } from '../components/3d/stones/StonePath'
-import { Rocks } from '../components/3d/stones/Rocks'
-import { Cobblestone } from '../components/3d/stones/CobbleStoneTile'
+import Flag from '../components3D/Flag'
+import NoticeBoard from '../components3D/NoticeBoard'
+import MyHouse from '../components3D/MyHouse'
+import { FenceEnd } from '../components3D/FenceEnd'
+import { StonePath } from '../components3D/stones/StonePath'
+import { Rocks } from '../components3D/stones/Rocks'
+import { Cobblestone } from '../components3D/stones/CobbleStoneTile'
 import { RigidBody } from '@react-three/rapier'
 
 
@@ -57,7 +57,7 @@ const QgScene = () => {
     const NoticeBoardWithLight = React.memo(({ position, rotation }) => (
         <group position={position} rotation={rotation}>
             <NoticeBoard />
-           
+
         </group>
     ))
 
@@ -85,7 +85,7 @@ const QgScene = () => {
             <Text3D font="/fonts/gentilis_bold.typeface.json" size={1} height={0.3}>
                 {char}
                 <meshStandardMaterial map={texture} />
-              </Text3D>
+            </Text3D>
         </RigidBody>
     );
 
@@ -116,7 +116,7 @@ const QgScene = () => {
 
             {/* Maison */}
             <group position={housePosition}>
-                <MyHouse  />
+                <MyHouse />
             </group>
 
             {/* Clôtures avec group scale appliqué une seule fois */}
@@ -174,7 +174,7 @@ const QgScene = () => {
                 <Rocks position={[4, 0, -3]} rotation={[0, -Math.PI, 0]} />
             </group>
 
-          
+
 
             <group>
                 {/* Portfolio */}
