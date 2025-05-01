@@ -6,7 +6,8 @@ import { ContactShadows, OrbitControls, Sky } from "@react-three/drei";
 
 import { MyAvatar } from './3d/MyAvatar';
 import { Chair } from './3d/Chair';
-import { Desks } from './3d/Desk';
+import { Desk } from './3d/Desk';
+
 
 
 
@@ -108,7 +109,7 @@ const Experience3D = ({ themeColor, darkMode }) => {
       <ContactShadows blur={2} />
       <group position={[0, 0, 1]}>
         <group position={[-1, 0, 1]} rotation={[0, Math.PI / 6, 0]}>
-          <Desks themeColor={themeColor} darkMode={darkMode} />
+          <Desk themeColor={themeColor} darkMode={darkMode} />
         </group>
         <group position={[-.5, 0, .5]} rotation={[0, -Math.PI / 6, 0]}>
           <Chair />
