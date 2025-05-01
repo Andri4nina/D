@@ -4,18 +4,18 @@ import { ContactShadows, Sky } from "@react-three/drei";
 import * as THREE from "three";
 import { OrbitControls } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
-import BushesScene from "../scenes/BushesScene";
-import CharacterScene from "../scenes/CharacterScene";
 import { SocketManager } from "../components/SocketManager";
-import QgScene from "../scenes/QgScene";
-import LanternScene from "../scenes/LanternScene";
-import WayScene from "../scenes/WayScene";
-import ProjectScene from "../scenes/ProjectScene";
 import { DayNightProvider, useDayNight } from "../contexts/DayNightContext";
-import BuildingScene from "../scenes/BuildingScene";
-import TeamScene from "../scenes/TeamScene";
-import CloudScene from "../scenes/CloudScene";
+import QgScene from "../scenes/QgScene";
 import TreeScene from "../scenes/TreeScene";
+import BushesScene from "../scenes/BushesScene";
+import LanternScene from "../scenes/LanternScene";
+import BuildingScene from "../scenes/BuildingScene";
+import WayScene from "../scenes/WayScene";
+import TeamScene from "../scenes/TeamScene";
+import ProjectScene from "../scenes/ProjectScene";
+/* import CloudScene from "../scenes/CloudScene"; */
+
 
 const WORLD_SIZE = 512;
 const VIEW_DISTANCE = 100;
