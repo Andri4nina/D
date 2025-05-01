@@ -30,21 +30,23 @@ const Immersive3DContent = ({ droneColor }) => {
   const { skyColor, isNight, timeOfDay, fogColor } = useDayNight();
 
   useEffect(() => {
-    scene.fog = new THREE.FogExp2(fogColor, FOG_DENSITY);
+    scene.fog = new THREE.Fog(fogColor, 0, VIEW_DISTANCE);
     return () => (scene.fog = null);
   }, [scene, fogColor]);
-
+  
   useFrame(() => {
     if (controlsRef.current) {
       const { x, y, z } = controlsRef.current.object.position;
       playerPositionRef.current = [x, y, z];
-
+  
       if (scene.fog) {
         scene.fog.color.copy(fogColor);
-        scene.fog.density = FOG_DENSITY * (1 + (y / 10));
+        scene.fog.near = 0;
+        scene.fog.far = 150; // Distance de brouillard autour du joueur
       }
     }
   });
+  
 
   useEffect(() => {
     if (directionalLightRef.current) {
