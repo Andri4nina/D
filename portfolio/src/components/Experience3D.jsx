@@ -4,9 +4,10 @@ import { Canvas } from "@react-three/fiber";
 import { ContactShadows, OrbitControls, Sky } from "@react-three/drei";
 
 
-import { MyAvatar } from './3d/MyAvatar';
+
 import { Chair } from './3d/Chair';
 import { Desk } from './3d/Desk';
+import { MyAvatar } from './3d/MyAvatar';
 
 
 
