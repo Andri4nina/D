@@ -2,16 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
 import { ContactShadows, OrbitControls, Sky } from "@react-three/drei";
-
-
-
-import { Chair } from './3d/Chair';
 import { Desk } from './3d/Desk';
 import { MyAvatar } from './3d/MyAvatar';
-
-
-
-
+import { Chair } from './3d/Chair';
 
 const Experience3D = ({ themeColor, darkMode }) => {
   const directionalLightRef = useRef();
