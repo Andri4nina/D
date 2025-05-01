@@ -1,4 +1,4 @@
-import { Drone } from '../components3D/Drone';
+import { Drone } from '../components/3D/Drone';
 import { charactersAtom, socket } from '../components/SocketManager';
 import React, { useEffect, useRef } from 'react';
 import { RigidBody } from '@react-three/rapier';

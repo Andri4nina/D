@@ -1,4 +1,4 @@
-import { Lantern } from '../components3D/Lantern'
+import { Lantern } from '../components/3D/Lantern'
 import React, { useMemo, useRef, useEffect } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'

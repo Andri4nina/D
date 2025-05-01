@@ -2,16 +2,16 @@ import { useFrame } from '@react-three/fiber';
 import { useThree } from '@react-three/fiber';
 import React, { useRef } from 'react'
 import * as THREE from 'three';
-import { Capitol, GasStation, Pharmacy, Police } from '../components3D/buildings/PublicBuildings';
-import { Coffee, Pizza, Shop } from '../components3D/buildings/BusinessBuildings';
-import { Building1 } from '../components3D/buildings/Building1';
-import { Building7 } from '../components3D/buildings/Building7';
-import { Building4 } from '../components3D/buildings/Building4';
-import { Building8 } from '../components3D/buildings/Building8';
-import { Building2 } from '../components3D/buildings/Building2';
-import { Building3 } from '../components3D/buildings/Building3';
-import { Building6 } from '../components3D/buildings/Building6';
-import { Building5 } from '../components3D/buildings/Building5';
+import { Capitol, GasStation, Pharmacy, Police } from '../components/3D/buildings/PublicBuildings';
+import { Coffee, Pizza, Shop } from '../components/3D/buildings/BusinessBuildings';
+import { Building1 } from '../components/3D/buildings/Building1';
+import { Building7 } from '../components/3D/buildings/Building7';
+import { Building4 } from '../components/3D/buildings/Building4';
+import { Building8 } from '../components/3D/buildings/Building8';
+import { Building2 } from '../components/3D/buildings/Building2';
+import { Building3 } from '../components/3D/buildings/Building3';
+import { Building6 } from '../components/3D/buildings/Building6';
+import { Building5 } from '../components/3D/buildings/Building5';
 
 const VISIBILITY_DISTANCE = 150;
 

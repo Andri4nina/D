@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import {
   Sapin1, Sapin2, Tree1, Tree2, Tree3, Tree4,
   DeathTree1, DeathTree2, DeathTree3, DeathTree4,
-} from '../components3D/trees/Trees';
+} from '../components/3D/trees/Trees';
 
 const VISIBILITY_DISTANCE = 150;
 

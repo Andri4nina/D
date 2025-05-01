@@ -1,7 +1,7 @@
 import React, { useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
-import { Bush } from '../components3D/trees/Trees';
+import { Bush } from '../components/3D/trees/Trees';
 
 
 const VISIBILITY_DISTANCE = 100;

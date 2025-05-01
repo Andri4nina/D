@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
-import Carrefour from '../components3D/ways/Carrefour';
-import TurnT from '../components3D/ways/TurnT';
-import { StreetStraight } from '../components3D/ways/StreetStraight';
-import { Turn } from '../components3D/ways/Turn';
+import Carrefour from '../components/3D/ways/Carrefour';
+import TurnT from '../components/3D/ways/TurnT';
+import { StreetStraight } from '../components/3D/ways/StreetStraight';
+import { Turn } from '../components/3D/ways/Turn';
 
 
 const WayScene = () => {
