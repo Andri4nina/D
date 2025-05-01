@@ -9,7 +9,7 @@ Title: Desk Low-Poly
 import React, { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
 
-export function Desk(props) {
+export function Desks(props) {
     const { nodes, materials } = useGLTF('/elements/desk.glb')
     return (
         <group {...props} dispose={null}>
