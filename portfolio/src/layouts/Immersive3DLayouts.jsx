@@ -14,6 +14,7 @@ import BuildingScene from "../scenes/BuildingScene";
 import WayScene from "../scenes/WayScene";
 import TeamScene from "../scenes/TeamScene";
 import ProjectScene from "../scenes/ProjectScene";
+import CharacterScene from "../scenes/CharacterScene";
 /* import CloudScene from "../scenes/CloudScene"; */
 
 
