@@ -14,8 +14,8 @@ const CVLayouts = ({ themeColor }) => {
                     <div className="flex flex-col items-center justify-center space-y-8">
 
                         <a
-                            href="/files/CV.pdf"
-                            download="CV Andrianina.pdf"
+                            href="/files/RasoamananaAndrianinaCV.pdf"
+                            download="Rasoamanana Andrianina CV.pdf"
                             className="px-8 py-3 rounded-md text-white font-bold text-lg flex items-center space-x-2 hover:scale-105 transition-transform"
                             style={{ backgroundColor: themeColor }}
                         >
